@@ -1,31 +1,20 @@
-var TennisGame1 = function(player1Name, player2Name) {
-    this.m_score1 = 0;
-    this.m_score2 = 0;
-    this.player1Name = player1Name;
-    this.player2Name = player2Name;
+var TennisGame1 = function() {  
+    this.scores = [0, 0]
 };
 
 TennisGame1.prototype.wonPoint = function({ player }) {
-  this[`m_score${player}`] += 1;
+  this.scores[player-1] += 1;
 };
 
 TennisGame1.prototype.getScore = function() {
-    var score = "";
-    var tempScore = 0;
+    const [score1, score2] = this.scores;
     const scoreMap = ["Love", "Fifteen", "Thirty", "Forty", "Deuce"];
-
-    if (this.m_score1 === this.m_score2) {
-        let suffix='';
-        if (this.m_score1 < 4) suffix = '-All';
-        return scoreMap[this.m_score1] + suffix;
-    } else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
-        var minusResult = this.m_score1 - this.m_score2;
-        if (minusResult === 1) return "Advantage player1";
-        else if (minusResult === -1) return "Advantage player2";
-        else if (minusResult >= 2) return "Win for player1";
-        else return "Win for player2";
-    }
-    return scoreMap[this.m_score1]+'-'+scoreMap[this.m_score2];
+    const minusResult = score1 - score2;
+    if (minusResult === 0 ) return scoreMap[score1] + (score1 < 4 ? '-All' : ''); 
+    if (score1 < 4 && score2 < 4) return scoreMap[score1]+'-'+scoreMap[score2]; 
+    const prefix = Math.abs(minusResult) ===1 ? 'Advantage' : 'Win for';
+    const player = minusResult > 0 ? 'player1' : 'player2'; 
+    return `${prefix} ${player}`
 };
 
 if (typeof window === "undefined") {
